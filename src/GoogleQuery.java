@@ -32,8 +32,11 @@ public class GoogleQuery
 	public String content;
 	public GoogleQuery(String searchKeyword)
 	{
+		
 		this.searchKeyword = searchKeyword;
-		this.url = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
+		this.url ="https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
+//				"http://www.google.com.tw/search?q="+searchKeyword+"&oe=utf8&num=30";
+//				"https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid";¼v¤ù·j´M 
 	}
 
 	private String fetchContent() throws IOException
@@ -41,10 +44,10 @@ public class GoogleQuery
 		String retVal = "";
 		URL u = new URL(url);
 		URLConnection conn = u.openConnection();
-		conn.setRequestProperty("User-agent", "Chrome/7.0.517.44");
+		conn.setRequestProperty("User-agent", "Mozilla/5.0");
+		conn.setRequestProperty("Accept-Charset", "UTF-8");
 		InputStream in = conn.getInputStream();
-		InputStreamReader inReader = new InputStreamReader(in,"utf-8");
-		BufferedReader bufReader = new BufferedReader(inReader);
+		BufferedReader bufReader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
 		String line = null;
 
 		while((line=bufReader.readLine())!=null)
@@ -75,6 +78,9 @@ public class GoogleQuery
 			{
 				String citeUrl = li.select("a").get(0).attr("href");
 				String title = li.select("a").get(0).select(".vvjwJb").text();
+				if(li.select("a").get(0).select(".vvjwJb").text().isEmpty()) {
+					title = "no Title";
+				}
 				System.out.println(title + ","+citeUrl);
 				retVal.put(title, citeUrl);
 			} catch (IndexOutOfBoundsException e) {

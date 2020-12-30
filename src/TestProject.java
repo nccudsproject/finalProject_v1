@@ -37,10 +37,10 @@ public class TestProject extends HttpServlet {
 		if(request.getParameter("keyword")== null) {
 			String requestUri = request.getRequestURI();
 			request.setAttribute("requestUri", requestUri);
-			request.getRequestDispatcher("Search.jsp").forward(request, response);
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 			return;
 		}
-		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
+		GoogleQuery google = new GoogleQuery(request.getParameter("keyword").replace(" ", "+"));
 		HashMap<String, String> query = google.query();
 		
 		String[][] s = new String[query.size()][2];
@@ -49,6 +49,7 @@ public class TestProject extends HttpServlet {
 		for(Entry<String, String> entry : query.entrySet()) {
 		    String key = entry.getKey();
 		    String value = entry.getValue();
+		    System.err.println(key);
 		    s[num][0] = key;
 		    s[num][1] = value;
 		    num++;
