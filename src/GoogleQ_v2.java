@@ -85,12 +85,13 @@ public class GoogleQ_v2
 //				System.out.println("\n\n\n");
 				String citeUrl = li.select("a").get(0).attr("href"); 
 				String title = li.select("a").get(0).select(".vvjwJb").text(); //.Text()會選到文字，tag裡面的內容不會被選到
-				if(li.select("a").get(0).select(".vvjwJb").text().isEmpty()) {
-					title = "no Title";
+				if(!(li.select("a").get(0).select(".vvjwJb").text().isEmpty())) {
+//					title = "no Title";
+					urlList.add(new UrlInf(title, citeUrl));
 				} //.Text()會選到文字，tag裡面的內容不會被選到
 				//System.out.println(title + ","+citeUrl);
 //				retVal.put(title, citeUrl); //hash放東西用put
-				urlList.add(new UrlInf(title, citeUrl));
+//				urlList.add(new UrlInf(title, citeUrl));
 				
 			} catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
