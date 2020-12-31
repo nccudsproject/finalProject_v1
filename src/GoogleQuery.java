@@ -34,6 +34,7 @@ public class GoogleQuery
 	{
 		
 		this.searchKeyword = searchKeyword;
+		//這個url可以找到比較相近的結果
 		this.url ="https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
 //				"http://www.google.com.tw/search?q="+searchKeyword+"&oe=utf8&num=30";
 //				"https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid";影片搜尋 

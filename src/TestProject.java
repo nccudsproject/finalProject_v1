@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -40,20 +41,32 @@ public class TestProject extends HttpServlet {
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 			return;
 		}
-		GoogleQuery google = new GoogleQuery(request.getParameter("keyword").replace(" ", "+"));
-		HashMap<String, String> query = google.query();
+		GoogleQ_v2 google = new GoogleQ_v2(request.getParameter("keyword").replace(" ", "+")); //如果文字間有空格要用+串起來不然會報錯
+		google.query();
+		ArrayList<UrlInf> query = google.getUrls();
 		
 		String[][] s = new String[query.size()][2];
 		request.setAttribute("query", s);
 		int num = 0;
-		for(Entry<String, String> entry : query.entrySet()) {
-		    String key = entry.getKey();
-		    String value = entry.getValue();
-		    System.err.println(key);
-		    s[num][0] = key;
-		    s[num][1] = value;
-		    num++;
-		}
+		
+//		for(Entry<String, String> entry : query.entrySet()) {
+//		    String key = entry.getKey();
+//		    String value = entry.getValue();
+//		    System.err.println(key);
+//		    s[num][0] = key;
+//		    s[num][1] = value;
+//		    num++;
+//		}
+		
+		for(UrlInf url:query) {
+	    String key = url.getTitle();
+	    String value = url.getUrl();
+	    System.err.println(key);
+	    s[num][0] = key;
+	    s[num][1] = value;
+	    num++;
+	}
+		
 		request.getRequestDispatcher("googleitem.jsp").forward(request, response); 
 		
 	}
