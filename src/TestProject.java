@@ -41,26 +41,23 @@ public class TestProject extends HttpServlet {
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 			return;
 		}
-		GoogleQ_v2 google = new GoogleQ_v2(request.getParameter("keyword").replace(" ", "+")); //¦pªG¤å¦r¶¡¦³ªÅ®æ­n¥Î+¦ê°_¨Ó¤£µM·|³ø¿ù
-		google.query();
-		ArrayList<UrlInf> query = google.getUrls();
+		QueryAnalysis analysis = new QueryAnalysis(request.getParameter("keyword")); //å·²ç¶“query()å¥½å°‡title+urlstringæ”¾å…¥Google_v2çš„urlListè£¡é¢
+//		GoogleQ_v2 google = new GoogleQ_v2(request.getParameter("keyword").replace(" ", "+")); //ç©ºæ ¼ç”¨+è£œèµ·ä¾†googleæ‰å¯ä»¥search
+		ArrayList<UrlInf> query = analysis.getGoogleQuery().getUrls();
 		
 		String[][] s = new String[query.size()][2];
 		request.setAttribute("query", s);
 		int num = 0;
-		
-//		for(Entry<String, String> entry : query.entrySet()) {
-//		    String key = entry.getKey();
-//		    String value = entry.getValue();
-//		    System.err.println(key);
-//		    s[num][0] = key;
-//		    s[num][1] = value;
-//		    num++;
-//		}
+
 		
 		for(UrlInf url:query) {
 	    String key = url.getTitle();
 	    String value = url.getUrl();
+	  //---------ç²å¾—åˆ†æ•¸by_hsu-------------
+//	    ArrayList<Double> score = new ArrayList<Double>();
+//	    
+//	    request.setAttribute("score", score);
+	    //------------------------------
 	    System.err.println(key);
 	    s[num][0] = key;
 	    s[num][1] = value;

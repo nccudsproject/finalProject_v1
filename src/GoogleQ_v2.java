@@ -15,9 +15,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Text;
-
-
-
+/*
+ * 1.æ¨¡ä»¿googleæœå°‹
+ * 2.field: serchKeyword(ä½¿ç”¨è€…è¼¸å…¥çš„keyword)
+ *          urlString(call Googleä½¿ç”¨çš„é€£çµï¼Œæœƒå°‡keywordæ”¾å…¥)
+ *          content(æ¨¡ä»¿google searchå¾Œçš„çµæœ)
+ *          u(ç•¶ä½¿ç”¨è€…è¼¸å…¥urlæ™‚ä½¿ç”¨)
+ *          urlList(å­˜æ”¾æŠ“ä¸‹ä¾†çš„title+url)
+ * 3.constructor: a.input keywordï¼Œç”¨inputçš„keywordç”Ÿæˆä¸€å€‹urlstringä¸¦å°‡ä»–æ”¾å…¥uï¼Œåˆå§‹åŒ–urlList
+ *                b.å…ˆä¸ç®¡
+ * 4.method:String fetchContent()ã€
+ *          String getContentã€
+ *          void query():å°‡call googleå¾ŒæŠ“ä¸‹ä¾†çš„url+titleæ”¾å…¥ArrayList<UrlInf> urlListã€‚ã€
+ *          ArrayList<UrlInf> getUrls()
+ */
 public class GoogleQ_v2 
 {
 	public String searchKeyword;
@@ -29,12 +40,14 @@ public class GoogleQ_v2
 	public GoogleQ_v2(String searchKeyword) throws MalformedURLException
 	{
 		this.searchKeyword = searchKeyword;
-//		this.urlString = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20"; //¼Ò¥é¿é¤Jªº·j´Mµ²ªG¡Anum=­nªºµ²ªG¼Æ¶q
-		this.urlString ="https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
-//		"http://www.google.com.tw/search?q="+searchKeyword+"&oe=utf8&num=30";
-//		"https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid";¼v¤ù·j´M 
+//		this.urlString = "https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid&oe=utf8&num=100";
+		//å…ˆæ¸¬è©¦20å€‹ï¼Œ
+		this.urlString ="https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=10&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
+//		å…¨éƒ¨:"http://www.google.com.tw/search?q="+searchKeyword+"&oe=utf8&num=30";
+//		å…¨éƒ¨:"https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK"
+//		å½±ç‰‡:"https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid";
 		u=new URL(urlString);
-		urlList=new ArrayList<UrlInf>(); //?????
+		urlList=new ArrayList<UrlInf>(); 
 	}
 	
 	public GoogleQ_v2(URL u)
@@ -48,7 +61,7 @@ public class GoogleQ_v2
 		String retVal = "";
 		//URL u = new URL(url);
 		URLConnection conn = u.openConnection();
-		conn.setRequestProperty("User-agent", "Mozilla/5.0");
+		conn.setRequestProperty("User-agent", "Mozilla/5.0 Chrome/8.0 Safari/537.36");
 		conn.setRequestProperty("Accept-Charset", "UTF-8");
 		InputStream in = conn.getInputStream();
 		InputStreamReader inReader = new InputStreamReader(in,"UTF-8");
@@ -61,43 +74,34 @@ public class GoogleQ_v2
 		}
 		return retVal;
 	}
-	
-	public void query() throws IOException  //HashMap<String, String>
+	/*
+	 * goal: å°‡call googleå¾ŒæŠ“ä¸‹ä¾†çš„url+titleæ”¾å…¥ArrayList<UrlInf> urlListã€‚
+	 * 
+	 */
+	public void query() throws IOException
 	{
 		if(content==null)
 		{
 			content= fetchContent();
 		}
-//		HashMap<String, String> retVal = new HashMap<String, String>();
-		
-		Document doc = Jsoup.parse(content); //Âà¦¨ºô­¶µ²ºc
+		Document doc = Jsoup.parse(content); 
 		System.out.println(doc.text());
 		Elements lis = doc.select("div");
-//		 System.out.println(lis);
-		lis = lis.select(".kCrYT"); //.+class name, #+id name, or ª½±µtag name
-		// System.out.println(lis.size());
-			
+		lis = lis.select(".kCrYT"); 
 		for(Element li : lis)
 		{
 			try 
 			{
-//				System.out.println(li);
-//				System.out.println("\n\n\n");
 				String citeUrl = li.select("a").get(0).attr("href"); 
-				String title = li.select("a").get(0).select(".vvjwJb").text(); //.Text()·|¿ï¨ì¤å¦r¡Atag¸Ì­±ªº¤º®e¤£·|³Q¿ï¨ì
+				String title = li.select("a").get(0).select(".vvjwJb").text(); 
 				if(!(li.select("a").get(0).select(".vvjwJb").text().isEmpty())) {
-//					title = "no Title";
 					urlList.add(new UrlInf(title, citeUrl));
-				} //.Text()·|¿ï¨ì¤å¦r¡Atag¸Ì­±ªº¤º®e¤£·|³Q¿ï¨ì
-				//System.out.println(title + ","+citeUrl);
-//				retVal.put(title, citeUrl); //hash©ñªF¦è¥Îput
-//				urlList.add(new UrlInf(title, citeUrl));
-				
+					System.out.println(urlList.get(0).getScore());
+				} 
 			} catch (IndexOutOfBoundsException e) {
-//				e.printStackTrace();
+				e.printStackTrace();
 			}		
 		}
-//		return retVal;
 	}
 	
 	public String getContent() throws IOException
@@ -110,8 +114,7 @@ public class GoogleQ_v2
 	}
 	
 	public ArrayList<UrlInf> getUrls() throws IOException
-	{
-		
+	{	
 		return urlList;
 	}
 }
