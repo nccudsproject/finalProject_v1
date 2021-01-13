@@ -20,12 +20,14 @@ import org.jsoup.nodes.Document;
 public class WordCounter {
 	private String urlStr;
     public String content_raw;
+    private String title;
     //---test--
     private TextProcess tProcess;
     //---------
     public WordCounter(String urlStr){
     	this.urlStr = urlStr;
     }
+    
     /*
      * goal: 獲得網頁內容並return
      * output: 輸出urlStr抓下來的結果，用UTF-8編碼，存在retVal裡並輸出
@@ -50,7 +52,7 @@ public class WordCounter {
 //		System.out.println(doc.text());
 		//------test-------
 //		return retVal.replaceAll("[A-Za-z0-9]+\\\\p{Punct}\\\\s*|\\t|\\r|\\n","");
-		return retVal.replaceAll("[A-Za-z0-9]+","").replaceAll("\\p{Punct}","").replaceAll("\\s*|\t|\r|\n", "");
+		return retVal.replaceAll("\\p{Punct}","").replaceAll("\\s*|\t|\r|\n", "");
 //		return retVal;
     }
     /*

@@ -37,15 +37,23 @@ public class GoogleQ_v2
 	public URL u;
 	public ArrayList<UrlInf> urlList;
 	
-	public GoogleQ_v2(String searchKeyword) throws MalformedURLException
+	public GoogleQ_v2(String searchKeyword,int type) throws MalformedURLException
 	{
 		this.searchKeyword = searchKeyword;
 //		this.urlString = "https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid&oe=utf8&num=100";
 		//先測試20個，
-		this.urlString ="https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=10&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
+		if(type==0) //youtube影片
+			this.urlString ="https://www.google.com.tw/search?q="+searchKeyword+"&num=10&tbs=srcf:H4sIAAAAAAAAANOuzC8tKU1K1UvOz1VLS0xOTcrPzwZzikvyk7PTUlNzQDy9knK13PySfHO9vNQStcSCgpzUlMTMnEqIytJcmBoAIq4hZk8AAAA,qdr:y&tbm=vid&sxsrf=ALeKk02XbRFId0LOkm0bmid2PcyP1Fx9wA:1609855028341&source=lnt&sa=X&ved=0ahUKEwjyk-qo-YTuAhW5KqYKHan2BsAQpwUIJg&biw=1536&bih=754&dpr=1.25";
+		else if(type==1) //google搜尋
+			this.urlString = "https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=20&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
+		else if(type==2) //youtube將開箱寫入URL
+			this.urlString ="https://www.google.com.tw/search?q="+searchKeyword+"+開箱&num=300&tbs=srcf:H4sIAAAAAAAAANOuzC8tKU1K1UvOz1VLS0xOTcrPzwZzikvyk7PTUlNzQDy9knK13PySfHO9vNQStcSCgpzUlMTMnEqIytJcmBoAIq4hZk8AAAA,qdr:y&tbm=vid&sxsrf=ALeKk02XbRFId0LOkm0bmid2PcyP1Fx9wA:1609855028341&source=lnt&sa=X&ved=0ahUKEwjyk-qo-YTuAhW5KqYKHan2BsAQpwUIJg&biw=1536&bih=754&dpr=1.25";
+		else if(type==3) //google將開箱寫入URL
+			this.urlString = "https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"+開箱&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK";
 //		全部:"http://www.google.com.tw/search?q="+searchKeyword+"&oe=utf8&num=30";
 //		全部:"https://www.google.com.tw/search?sxsrf=ALeKk00RuwmrezLvpG4Yb2VrWYKNjhEVzw%3A1609342671041&source=hp&ei=zp7sX4P5POmFr7wPytm74A0&q="+searchKeyword+"&num=100&gs_lcp=CgZwc3ktYWIQDDIECAAQHlD7BVj7BWC7DGgAcAB4AIABWogBWpIBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiDmOjRhPbtAhXpwosBHcrsDtwQ4dUDCAK"
 //		影片:"https://www.google.com.tw/search?q="+searchKeyword+"&tbm=vid";
+//		最近一年YT影片:"https://www.google.com.tw/search?q=車子&tbs=srcf:H4sIAAAAAAAAANOuzC8tKU1K1UvOz1VLS0xOTcrPzwZzikvyk7PTUlNzQDy9knK13PySfHO9vNQStcSCgpzUlMTMnEqIytJcmBoAIq4hZk8AAAA,qdr:y&tbm=vid&sxsrf=ALeKk02XbRFId0LOkm0bmid2PcyP1Fx9wA:1609855028341&source=lnt&sa=X&ved=0ahUKEwjyk-qo-YTuAhW5KqYKHan2BsAQpwUIJg&biw=1536&bih=754&dpr=1.25"
 		u=new URL(urlString);
 		urlList=new ArrayList<UrlInf>(); 
 	}
@@ -104,6 +112,9 @@ public class GoogleQ_v2
 		}
 	}
 	
+	public String returnKey() {
+		return searchKeyword;
+	}
 	public String getContent() throws IOException
 	{
 		if(content==null)

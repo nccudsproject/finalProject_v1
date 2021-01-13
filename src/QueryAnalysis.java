@@ -22,30 +22,30 @@ public class QueryAnalysis {
 	private String user_inputKW;
 	private ArrayList<Keyword> keywords;
 	
-	public QueryAnalysis(String user_inputKW) throws IOException
+	public QueryAnalysis(GoogleQ_v2 google) throws IOException
 	{
-		this.user_inputKW=user_inputKW;
-		originalQuery=new GoogleQ_v2(user_inputKW.replace(" ", "+"));
+		originalQuery=google;
+		this.user_inputKW=originalQuery.returnKey();
 		originalQuery.query();
 		keywords=new ArrayList<Keyword>();
 		//因為有點卡先拿一個做測試就好
 		keywords.add(new Keyword("開箱",0,0.9));
-//		keywords.add(new Keyword("新",0,0.5));
-//		keywords.add(new Keyword("介紹",0,0.5));
-//		keywords.add(new Keyword("新品",0,0.7));
-//		keywords.add(new Keyword("寶",0,0.1));
-//		keywords.add(new Keyword("比較",0,0.3));
-//		keywords.add(new Keyword("測試",0,0.4));
-//		keywords.add(new Keyword("看法",0,0.4));
-//		keywords.add(new Keyword("感想",0,0.35));
-//		keywords.add(new Keyword("評測",0,0.4));
-//		keywords.add(new Keyword("揭",0,0.2));
-//		keywords.add(new Keyword("夯",0,0.5));
-//		keywords.add(new Keyword("實測",0,0.5));
-//		keywords.add(new Keyword("人氣",0,0.35));
-//		keywords.add(new Keyword("熱門",0,0.4));
-//		keywords.add(new Keyword("分享",0,0.25));
-		/*keywords.add(new Keyword("unbox",0,0.9));
+		keywords.add(new Keyword("新",0,0.5));
+		keywords.add(new Keyword("介紹",0,0.5));
+		keywords.add(new Keyword("新品",0,0.7));
+		keywords.add(new Keyword("寶",0,0.1));
+		keywords.add(new Keyword("比較",0,0.3));
+		keywords.add(new Keyword("測試",0,0.4));
+		keywords.add(new Keyword("看法",0,0.4));
+		keywords.add(new Keyword("感想",0,0.35));
+		keywords.add(new Keyword("評測",0,0.4));
+		keywords.add(new Keyword("揭",0,0.2));
+		keywords.add(new Keyword("夯",0,0.5));
+		keywords.add(new Keyword("實測",0,0.5));
+		keywords.add(new Keyword("人氣",0,0.35));
+		keywords.add(new Keyword("熱門",0,0.4));
+		keywords.add(new Keyword("分享",0,0.25));
+		keywords.add(new Keyword("unbox",0,0.9));
 		keywords.add(new Keyword("new",0,0.5));
 		keywords.add(new Keyword("introduction",0,0.5));
 		keywords.add(new Keyword("comparison",0,0.3));
@@ -58,7 +58,7 @@ public class QueryAnalysis {
 		keywords.add(new Keyword("testing",0,0.5));
 		keywords.add(new Keyword("famous",0,0.35));
 		keywords.add(new Keyword("hit",0,0.4));
-		keywords.add(new Keyword("share",0,0.25));*/
+		keywords.add(new Keyword("share",0,0.25));
 //		keywords.add(new Keyword(user_inputKW,0,1));//�ϥΪ̿�J��keyword.
 		getScore();  //先不算分數
 		urlSort(0, originalQuery.getUrls().size() - 1);
@@ -67,7 +67,7 @@ public class QueryAnalysis {
 	public QueryAnalysis(String user_inputKW,ArrayList<Keyword> k) throws IOException
 	{
 		this.user_inputKW=user_inputKW;
-		originalQuery=new GoogleQ_v2(user_inputKW);
+		originalQuery=new GoogleQ_v2(user_inputKW.replace(" ", "+"),0);
 		originalQuery.query();
 		keywords=k;
 		keywords.add(new Keyword(user_inputKW,0,1)); //�ϥΪ̿�J��keyword.
@@ -86,27 +86,27 @@ public class QueryAnalysis {
 //			System.out.println("Url After sub: "+u.getUrl().substring(a,b));
 			//-----------------------------------
 //			System.out.println(u.getUrl().substring(a,b));
-			WordCounter w=new WordCounter("https://www.google.com.tw"+u.getUrl()); 
+			TitleCounter t=new TitleCounter(u.getTitle());  
 			double totalScore=0;
 			for(Keyword k:keywords)
 			{
 				try {
-					k.setCount(w.countKeyword(k.getName())); //countKeyword最耗時間
+					k.setCount(t.countKeyword(k.getName())); //countKeyword最耗時間
 					double count=k.getCount();
 					double weight = k.getWeight();
 					//------計算細節顯示by Hsu-----
-					System.out.println("key_name"+k.getName());
-//					System.out.println("key_count"+count);
-//					System.out.println("key_weight"+weight);
+//					System.out.println("key_name:"+k.getName());
+//					System.out.println("key_count:"+count);
+//					System.out.println("key_weight:"+weight);
 //					System.out.println("----網頁內容------");
 //					System.out.println(w.fetchContent());
 					//--------------------------
 					totalScore+=count*weight;					
-					}
-					catch (Exception e)
-					{
-						continue;
-					}
+				}
+				catch (Exception e)
+				{
+					continue;
+				}
 			}
 			//------設定urlList裡UrlInf的score
 			u.setScore(totalScore);
